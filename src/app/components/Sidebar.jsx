@@ -21,6 +21,7 @@ export default function Sidebar() {
     { name: "Menu", href: "/menu", icon: <FiLayers /> },
     { name: "Gallery", href: "/bargallery", icon: <FiImage /> },
     { name: "Contacts", href: "/contact", icon: <FiMail /> },
+    { name: "Company Info", href: "/companyinfo", icon: <FiMail /> },
   ];
 
   const handleLogout = () => {

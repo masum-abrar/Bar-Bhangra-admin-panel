@@ -10,12 +10,81 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+
 import { Loader2, Pencil, Trash2, Plus } from "lucide-react";
 import Sidebar from "@/app/components/Sidebar";
 import { toast, Toaster } from "react-hot-toast";
 import API from "@/libs/api";
 
 export default function EventAdmin() {
+  const [popupEnabled, setPopupEnabled] = useState(false);
+
+  // Fetch initial setting
+  useEffect(() => {
+    const fetchSetting = async () => {
+      try {
+        const res = await fetch(
+          "https://bar-bhangra-backend.vercel.app/api/v1/settings/event-popup"
+        );
+        const data = await res.json();
+        if (data.success) setPopupEnabled(data.enabled);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchSetting();
+  }, []);
+
+  // Toggle switch
+  const handleToggle = async (value) => {
+    try {
+      const promise = fetch(
+        "https://bar-bhangra-backend.vercel.app/api/v1/settings/event-popup",
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ enabled: value }),
+        }
+      ).then((res) => res.json());
+
+      const data = await toast.promise(promise, {
+        loading: value ? "Enabling event popup..." : "Disabling event popup...",
+        success: value ? "Event popup enabled ✅" : "Event popup disabled ❌",
+        error: "Failed to update popup setting",
+      });
+
+      if (data.success) {
+        setPopupEnabled(data.enabled);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong");
+    }
+  };
+
+  // return (
+  //   <div className="flex justify-between items-center mb-6">
+  //     <h1 className="text-3xl font-semibold">Manage Events</h1>
+
+  //     {/* Global Switch */}
+  //     <div className="flex items-center gap-3">
+  //       <span>Show Event Popup</span>
+  //       <Switch checked={popupEnabled} onCheckedChange={handleToggle} />
+  //     </div>
+
+  //     <Button
+  //       className="bg-amber-600 hover:bg-amber-700"
+  //       onClick={() => {
+  //         setEditEvent(null);
+  //         resetForm();
+  //         setOpen(true);
+  //       }}
+  //     >
+  //       <Plus className="w-4 h-4 mr-2" /> Add Event
+  //     </Button>
+  //   </div>
+  // );
   const [events, setEvents] = useState([]);
   const [open, setOpen] = useState(false);
   const [editEvent, setEditEvent] = useState(null);
@@ -190,6 +259,13 @@ export default function EventAdmin() {
       <div className="flex-1 px-6 py-10">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-semibold">Manage Events</h1>
+
+          {/* Global Switch */}
+          <div className="flex items-center gap-3">
+            <span>Show Event Popup</span>
+            <Switch checked={popupEnabled} onCheckedChange={handleToggle} />
+          </div>
+
           <Button
             className="bg-amber-600 hover:bg-amber-700"
             onClick={() => {
