@@ -7,6 +7,7 @@ import {
   FiMail,
   FiLogOut,
   FiCalendar,
+  FiMic,
 } from "react-icons/fi";
 import { useRouter, usePathname } from "next/navigation";
 
@@ -20,6 +21,7 @@ export default function Sidebar() {
     { name: "Story", href: "/story", icon: <FiLayers /> },
     { name: "Menu", href: "/menu", icon: <FiLayers /> },
     { name: "Gallery", href: "/bargallery", icon: <FiImage /> },
+    { name: "Announcement", href: "/announcement", icon: <FiMic /> },
     { name: "Contacts", href: "/contact", icon: <FiMail /> },
     { name: "Company Info", href: "/companyinfo", icon: <FiMail /> },
   ];
